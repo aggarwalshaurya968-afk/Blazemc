@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlazeMC Store — Ranks, Perks & Cosmetics</title>
+<meta name="description" content="Support BlazeMC and unlock ranks, perks, and cosmetics. Buy once, applied in-game on next login.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0705; --bg2:#120c08; --bg3:#1a110b; --panel:#150e09;
+  --ember:#ff7a1a; --molten:#ff3a15; --gold:#ffc85c; --purple:#7a4dff;
+  --text:#f5ece1; --dim:#a89a8c;
+  --line:rgba(255,140,60,0.14);
+  --card:#14100c;
+  --grad-hero:linear-gradient(135deg, #ff3a15 0%, #ff7a1a 50%, #ffc85c 100%);
+  --grad-feat:linear-gradient(135deg,#7a4dff 0%, #4b2dbf 100%);
+  --grad-btn:linear-gradient(135deg,#ff3a15,#ff7a1a);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Inter',sans-serif; font-weight:500;
+  overflow-x:hidden; min-height:100vh;
+  background-image:
+    radial-gradient(ellipse 70% 45% at 20% -5%, rgba(255,58,21,.18), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 85% 5%, rgba(255,122,26,.12), transparent 60%),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(122,77,255,.10), transparent 70%);
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.04;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--molten);color:#fff}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--ember),var(--molten));border-radius:6px}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.display{font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.01em;line-height:.95}
+.eyebrow{font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--ember)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px;position:relative;z-index:2}
+
+/* Floating embers */
+.embers{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.ember{position:absolute;bottom:-20px;width:6px;height:6px;border-radius:50%;
+  background:radial-gradient(circle,#ffc85c 0%,#ff7a1a 40%,transparent 70%);
+  animation:rise linear infinite;filter:blur(.5px);opacity:.7}
+@keyframes rise{
+  0%{transform:translateY(0) translateX(0) scale(1);opacity:0}
+  10%{opacity:.9}
+  100%{transform:translateY(-110vh) translateX(var(--dx,40px)) scale(.3);opacity:0}
+}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(14px);background:rgba(10,7,5,.75);border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1240px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:24px}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Anton',sans-serif;font-size:1.35rem;letter-spacing:.06em;text-transform:uppercase}
+.brand-mark{width:36px;height:36px;border-radius:9px;background:var(--grad-btn);display:grid;place-items:center;box-shadow:0 6px 20px rgba(255,58,21,.4);animation:pulse 2.4s ease-in-out infinite}
+.brand-mark svg{width:20px;height:20px;fill:#fff}
+@keyframes pulse{0%,100%{box-shadow:0 6px 20px rgba(255,58,21,.4)}50%{box-shadow:0 6px 32px rgba(255,58,21,.75)}}
+.nav-links{display:flex;gap:6px;margin:0 auto}
+.nav-link{padding:8px 16px;border-radius:8px;font-weight:600;font-size:.95rem;color:var(--text);transition:.2s;position:relative}
+.nav-link:hover{background:rgba(255,122,26,.1);color:var(--ember)}
+.nav-link.active{color:var(--ember)}
+.nav-link.active::after{content:"";position:absolute;bottom:-16px;left:20%;right:20%;height:2px;background:var(--grad-btn);border-radius:2px}
+.cart-btn{width:40px;height:40px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;background:transparent;color:var(--text);cursor:pointer;transition:.2s;position:relative}
+.cart-btn:hover{border-color:var(--ember);color:var(--ember)}
+.cart-badge{position:absolute;top:-6px;right:-6px;background:var(--molten);color:#fff;font-size:.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:grid;place-items:center}
+.login-btn{padding:10px 22px;border-radius:10px;background:var(--grad-btn);color:#fff;font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:8px;cursor:pointer;border:none;box-shadow:0 6px 20px rgba(255,58,21,.35);transition:.2s}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,58,21,.55)}
+.login-btn svg{width:16px;height:16px}
+
+/* HERO */
+.hero{padding:140px 0 40px;position:relative}
+.hero .eyebrow{margin-bottom:14px;opacity:0;animation:fadeUp .8s .1s forwards}
+.hero h1{font-size:clamp(2.4rem,5.6vw,4.2rem);margin-bottom:16px;opacity:0;animation:fadeUp .8s .25s forwards}
+.hero h1 .grad{background:var(--grad-hero);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;background-size:200% 100%;animation:shimmer 4s linear infinite}
+@keyframes shimmer{0%{background-position:0 0}100%{background-position:200% 0}}
+.hero p{color:var(--dim);max-width:520px;font-size:1.02rem;line-height:1.55;opacity:0;animation:fadeUp .8s .4s forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* DONATION GOAL */
+.goal-card{margin:36px 0 40px;border:1px solid var(--line);border-radius:16px;padding:22px 26px;
+  background:linear-gradient(135deg,rgba(255,58,21,.10),rgba(20,16,12,.6));
+  backdrop-filter:blur(8px);opacity:0;animation:fadeUp .8s .55s forwards;position:relative;overflow:hidden}
+.goal-card::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 100px at 10% 0%,rgba(255,58,21,.18),transparent 60%);pointer-events:none}
+.goal-head{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:14px;position:relative}
+.goal-title{font-family:'Anton',sans-serif;font-size:1.5rem;letter-spacing:.02em;text-transform:uppercase}
+.goal-eyebrow{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.goal-nums{font-family:'Anton',sans-serif;font-size:1.4rem;letter-spacing:.03em}
+.goal-nums .cur{color:var(--gold)}.goal-nums .sep{color:var(--dim);margin:0 8px}
+.goal-bar{height:10px;border-radius:6px;background:rgba(255,255,255,.06);overflow:hidden;position:relative}
+.goal-bar-fill{height:100%;width:0;background:var(--grad-btn);border-radius:6px;position:relative;box-shadow:0 0 20px rgba(255,58,21,.6);animation:fill 1.6s .8s cubic-bezier(.2,.8,.2,1) forwards}
+.goal-bar-fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:sweep 2.4s linear infinite}
+@keyframes fill{to{width:38%}}
+@keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:300px 1fr;gap:28px;padding-bottom:80px}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+
+/* SIDEBAR */
+.side{display:flex;flex-direction:column;gap:20px}
+.featured-card{border-radius:16px;padding:44px 20px;background:var(--grad-feat);text-align:center;position:relative;overflow:hidden;box-shadow:0 20px 50px rgba(122,77,255,.35);cursor:pointer;transition:.3s}
+.featured-card:hover{transform:translateY(-4px);box-shadow:0 30px 70px rgba(122,77,255,.55)}
+.featured-card::before{content:"";position:absolute;inset:-50%;background:conic-gradient(from 0deg,transparent,rgba(255,255,255,.15),transparent 30%);animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.featured-card-inner{position:relative;z-index:2}
+.featured-card h3{font-family:'Anton',sans-serif;font-size:2.2rem;letter-spacing:.06em;color:#fff;text-shadow:0 4px 12px rgba(0,0,0,.3)}
+.featured-card .arrows{display:flex;justify-content:center;gap:6px;margin-top:14px;color:rgba(255,255,255,.8)}
+.side-panel{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:18px}
+.side-title{font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+.donor{display:flex;align-items:center;gap:14px;padding:12px;border-radius:12px;background:linear-gradient(135deg,rgba(255,122,26,.08),rgba(255,58,21,.04));border:1px solid rgba(255,122,26,.14)}
+.donor-avatar{width:56px;height:64px;border-radius:8px;background:linear-gradient(180deg,#f2c99b 0%,#f2c99b 45%,#4a90e2 45%,#4a90e2 100%);flex-shrink:0;image-rendering:pixelated;position:relative;overflow:hidden}
+.donor-avatar::before{content:"";position:absolute;top:8px;left:14px;width:6px;height:6px;background:#000;box-shadow:14px 0 0 #000}
+.donor-avatar::after{content:"";position:absolute;top:20px;left:18px;right:18px;height:3px;background:#8b4513}
+.donor-name{font-family:'Anton',sans-serif;font-size:1.15rem;letter-spacing:.03em;background:var(--grad-hero);-webkit-background-clip:text;background-clip:text;color:transparent}
+.donor-amount{color:var(--gold);font-weight:800;font-size:1.05rem;margin-top:2px}
+.donor-label{font-size:.65rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-top:2px}
+.avatars-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.mini-avatar{aspect-ratio:1;border-radius:6px;background:linear-gradient(180deg,#f2c99b 50%,#4a90e2 50%);image-rendering:pixelated;position:relative;transition:.2s;cursor:pointer}
+.mini-avatar:nth-child(2){background:linear-gradient(180deg,#87ceeb 50%,#2d5f8b 50%)}
+.mini-avatar:nth-child(3){background:linear-gradient(180deg,#3a3a3a 50%,#1a1a1a 50%)}
+.mini-avatar:nth-child(4){background:linear-gradient(180deg,#deb887 50%,#654321 50%)}
+.mini-avatar:nth-child(5){background:linear-gradient(180deg,#ff6b6b 50%,#c92a2a 50%)}
+.mini-avatar:nth-child(7){background:linear-gradient(180deg,#c8c8c8 50%,#666 50%)}
+.mini-avatar:nth-child(8){background:linear-gradient(180deg,#f2c99b 50%,#3a7d3a 50%)}
+.mini-avatar:hover{transform:scale(1.15) rotate(-4deg);z-index:2}
+.mini-avatar::before{content:"";position:absolute;top:22%;left:28%;width:12%;height:12%;background:#000;box-shadow:28% 0 0 #000}
+
+/* MAIN GRID */
+.main-col{display:flex;flex-direction:column;gap:30px}
+.section-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.section-head h2{font-family:'Anton',sans-serif;font-size:1.9rem;letter-spacing:.02em;text-transform:uppercase}
+.count{font-size:.85rem;color:var(--dim)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+
+.product{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:.35s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;opacity:0;transform:translateY(20px);animation:pop .6s forwards}
+.product:nth-child(1){animation-delay:.1s}.product:nth-child(2){animation-delay:.18s}.product:nth-child(3){animation-delay:.26s}
+.product:nth-child(4){animation-delay:.34s}.product:nth-child(5){animation-delay:.42s}.product:nth-child(6){animation-delay:.5s}
+.product:nth-child(7){animation-delay:.58s}.product:nth-child(8){animation-delay:.66s}.product:nth-child(9){animation-delay:.74s}
+@keyframes pop{to{opacity:1;transform:translateY(0)}}
+.product:hover{transform:translateY(-6px);border-color:rgba(255,122,26,.4);box-shadow:0 20px 40px rgba(255,58,21,.15)}
+.product-img{aspect-ratio:1;position:relative;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 50% 50%,rgba(255,122,26,.15),transparent 70%)}
+.product-img .art{width:78%;height:78%;display:grid;place-items:center;transition:.5s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 10px 20px rgba(0,0,0,.4))}
+.product:hover .product-img .art{transform:scale(1.1) rotate(-3deg)}
+.product-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,.45));pointer-events:none}
+.badge-mo{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1);padding:4px 10px;border-radius:20px;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);z-index:2}
+.product-body{padding:16px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.product-name{font-family:'Anton',sans-serif;font-size:1.3rem;letter-spacing:.02em;text-transform:uppercase}
+.product-desc{font-size:.85rem;color:var(--dim);line-height:1.4;flex:1}
+.product-foot{display:flex;justify-content:space-between;align-items:center;padding:0 18px 18px;gap:10px}
+.price{display:flex;flex-direction:column;gap:0}
+.price-old{font-size:.8rem;color:var(--dim);text-decoration:line-through}
+.price-new{font-family:'Anton',sans-serif;font-size:1.4rem;letter-spacing:.02em;color:#7dffb0}
+.price-single .price-new{color:var(--gold)}
+.actions{display:flex;gap:6px}
+.btn-plus,.btn-gift{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--text);cursor:pointer;display:grid;place-items:center;transition:.2s}
+.btn-plus:hover,.btn-gift:hover{border-color:var(--ember);color:var(--ember);transform:translateY(-2px)}
+.btn-buy{padding:8px 18px;background:var(--grad-btn);color:#fff;font-weight:800;font-size:.85rem;letter-spacing:.05em;text-transform:uppercase;border:none;border-radius:8px;cursor:pointer;transition:.2s;box-shadow:0 4px 14px rgba(255,58,21,.4)}
+.btn-buy:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(255,58,21,.6)}
+.btn-gift{width:auto;padding:0 12px;font-size:.75rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+
+/* Product art (SVG/emoji stand-ins) */
+.art-emoji{font-size:6rem;line-height:1;user-select:none}
+
+/* CATEGORY tabs */
+.cats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.cat{padding:8px 16px;border-radius:20px;border:1px solid var(--line);font-size:.8rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:.2s;background:transparent;color:var(--dim)}
+.cat:hover{color:var(--text);border-color:var(--ember)}
+.cat.on{background:var(--grad-btn);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(255,58,21,.4)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--line);padding:40px 0;text-align:center;color:var(--dim);font-size:.85rem}
+footer .brand{display:inline-flex;margin-bottom:10px}
+
+/* Cookie banner */
+.cookie{position:fixed;left:20px;right:20px;bottom:20px;max-width:1200px;margin:0 auto;background:rgba(20,16,12,.95);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:14px;padding:16px 22px;display:flex;gap:16px;align-items:center;z-index:200;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:fadeUp .6s .8s both}
+.cookie-icon{width:36px;height:36px;border-radius:10px;background:var(--grad-btn);display:grid;place-items:center;flex-shrink:0}
+.cookie-body{flex:1;font-size:.85rem;color:var(--dim);line-height:1.4}
+.cookie-body b{color:var(--text);font-size:.95rem;display:block;margin-bottom:2px}
+.cookie-btns{display:flex;gap:8px;flex-shrink:0}
+.cookie .deny{padding:8px 18px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--text);cursor:pointer;font-weight:600}
+.cookie .accept{padding:8px 18px;border-radius:8px;background:var(--grad-btn);color:#fff;font-weight:700;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(255,58,21,.4)}
+@media (max-width:640px){.cookie{flex-direction:column;text-align:center}}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="embers" id="embers"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 2 6 8v6l6 6 6-6V8z"/></svg></span>
+      <span>BlazeMC</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="#">Home</a>
+      <a class="nav-link active" href="#">Store</a>
+      <a class="nav-link" href="#">Discord</a>
+    </div>
+    <button class="cart-btn" aria-label="Cart">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="cart-badge">0</span>
+    </button>
+    <button class="login-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Login / Register
+    </button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Store</div>
+    <h1 class="display">Welcome to the <span class="grad">BlazeMC Store</span></h1>
+    <p>Ranks, perks and cosmetics for the network. Buy once, applied in-game on next login.</p>
+
+    <div class="goal-card">
+      <div class="goal-head">
+        <div>
+          <div class="goal-eyebrow">Donation Goal</div>
+          <div class="goal-title">Monthly Goal</div>
+        </div>
+        <div class="goal-nums"><span class="cur">$773.10</span><span class="sep">/</span><span>$2000.00</span></div>
+      </div>
+      <div class="goal-bar"><div class="goal-bar-fill"></div></div>
+    </div>
+
+    <div class="layout">
+      <aside class="side">
+        <div class="featured-card">
+          <div class="featured-card-inner">
+            <h3>FEATURED</h3>
+            <div class="arrows">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7l-4 5 4 5M3 12h13"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 7l4 5-4 5M21 12H8"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-panel">
+          <div class="side-title">Top Donator</div>
+          <div class="donor">
+            <div class="donor-avatar"></div>
+            <div>
+              <div class="donor-name">BlazeKing69</div>
+              <div class="donor-amount">$514.00</div>
+              <div class="donor-label">Donated</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-panel">
+          <div class="side-title">Recent Payments</div>
+          <div class="avatars-grid">
+            <div class="mini-avatar"></div><div class="mini-avatar"></div><div class="mini-avatar"></div>
+            <div class="mini-avatar"></div><div class="mini-avatar"></div><div class="mini-avatar"></div>
+            <div class="mini-avatar"></div><div class="mini-avatar"></div><div class="mini-avatar"></div>
+            <div class="mini-avatar"></div>
+          </div>
+        </div>
+
+        <div class="side-panel">
+          <div class="side-title">Categories</div>
+          <div class="cats" style="flex-direction:column;align-items:stretch">
+            <button class="cat on">🔥 Featured</button>
+            <button class="cat">⚔️ Ranks</button>
+            <button class="cat">✨ Cosmetics</button>
+            <button class="cat">🎁 Bundles</button>
+            <button class="cat">💎 Perks</button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main-col">
+        <div>
+          <div class="section-head">
+            <h2>Featured Products</h2>
+            <span class="count">10 items</span>
+          </div>
+          <div class="grid" id="grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 2 6 8v6l6 6 6-6V8z"/></svg></span>BlazeMC</div>
+    <div>© 2026 BlazeMC Network. All ranks apply on next login. Not affiliated with Mojang.</div>
+  </div>
+</footer>
+
+<div class="cookie" id="cookie">
+  <div class="cookie-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+  <div class="cookie-body"><b>Cookie Preferences</b>We use cookies to maintain your session and improve your experience. Essential cookies are required for the site to function.</div>
+  <div class="cookie-btns">
+    <button class="deny" onclick="document.getElementById('cookie').classList.add('hide')">Deny</button>
+    <button class="accept" onclick="document.getElementById('cookie').classList.add('hide')">Accept All</button>
+  </div>
+</div>
+
+<script>
+// Embers
+const embers = document.getElementById('embers');
+for(let i=0;i<40;i++){
+  const e=document.createElement('div');e.className='ember';
+  e.style.left=Math.random()*100+'%';
+  e.style.animationDuration=(6+Math.random()*8)+'s';
+  e.style.animationDelay=(Math.random()*8)+'s';
+  e.style.setProperty('--dx',(Math.random()*120-60)+'px');
+  e.style.width=e.style.height=(3+Math.random()*5)+'px';
+  embers.appendChild(e);
+}
+
+// Products
+const products = [
+  {name:"BLAZE BUNDLE",desc:"Special anniversary bundle with every rank perk unlocked",old:"$125.00",price:"$100.00",art:"🔥",tag:"",single:true},
+  {name:"Ember [Monthly]",desc:"Ember rank monthly — chat colors + fly in lobby",old:"$3.00",price:"$2.40",art:"⚔️",tag:"/ 30D"},
+  {name:"Molten [Monthly]",desc:"Molten rank monthly — kits + particle trails",old:"$6.00",price:"$4.80",art:"🛡️",tag:"/ 30D"},
+  {name:"Inferno [Monthly]",desc:"Inferno rank monthly — 3 homes + /nick",old:"$10.00",price:"$8.00",art:"👑",tag:"/ 30D"},
+  {name:"Phoenix [Monthly]",desc:"Phoenix rank monthly — top-tier perks unlocked",old:"$18.00",price:"$14.40",art:"🦅",tag:"/ 30D"},
+  {name:"Dragon [Monthly]",desc:"Dragon rank monthly — ultimate perks & cosmetics",old:"$25.00",price:"$20.00",art:"🐉",tag:"/ 30D"},
+  {name:"Blaze Cape",desc:"Animated cape with ember particle trail",old:"$8.00",price:"$6.40",art:"🧣",tag:""},
+  {name:"Fire Sword Skin",desc:"Cosmetic sword skin with molten glow",old:"$5.00",price:"$4.00",art:"⚔️",tag:""},
+  {name:"Meteor Kit",desc:"Cosmetic kit with meteor arrival animation",old:"$12.00",price:"$9.60",art:"☄️",tag:""},
+];
+const grid=document.getElementById('grid');
+products.forEach(p=>{
+  const cls=p.single?'product price-single':'product';
+  grid.insertAdjacentHTML('beforeend',`
+    <div class="${cls}">
+      <div class="product-img">
+        ${p.tag?`<span class="badge-mo">${p.tag}</span>`:''}
+        <div class="art"><span class="art-emoji">${p.art}</span></div>
+      </div>
+      <div class="product-body">
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+      </div>
+      <div class="product-foot">
+        <div class="price">
+          <span class="price-old">${p.old}</span>
+          <span class="price-new">${p.price}</span>
+        </div>
+        <div class="actions">
+          <button class="btn-plus" aria-label="Add">+</button>
+          <button class="btn-buy">Buy</button>
+          <button class="btn-gift">Gift</button>
+        </div>
+      </div>
+    </div>`);
+});
+
+// Parallax tilt on cards
+document.querySelectorAll('.product').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`translateY(-6px) rotateX(${-y*4}deg) rotateY(${x*4}deg)`;
+  });
+  card.addEventListener('mouseleave',()=>card.style.transform='');
+});
+
+// Category filter (visual only)
+document.querySelectorAll('.cat').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('.cat').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on');
+}));
+
+// Nav shrink on scroll
+addEventListener('scroll',()=>{
+  const n=document.querySelector('nav');
+  n.style.padding=scrollY>20?'0':'';
+  n.style.background=scrollY>20?'rgba(10,7,5,.92)':'';
+});
+</script>
+</body>
+</html>
