@@ -48,8 +48,8 @@ function AuthPage() {
         <h1 className="display" style={{ fontSize: "2.4rem", color: "var(--highlight)", marginTop: 6 }}>{mode === "signin" ? "Sign in" : "Create account"}</h1>
         <p style={{ color: "var(--ash)", marginTop: 6, fontSize: ".9rem" }}>Admin & staff area.</p>
         <div style={{ display: "grid", gap: 12, marginTop: 20 }}>
-          <input className="field" type="email" required placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} />
-          <input className="field" type="password" required minLength={6} placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+          <input className="field" type="email" required autoComplete="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} />
+          <input className="field" type="password" required minLength={6} autoComplete="current-password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
           <button className="mc-btn primary" style={{ justifyContent: "center" }} disabled={busy}>{busy ? "…" : mode === "signin" ? "Sign in" : "Sign up"}</button>
           <button type="button" className="mc-btn sm" onClick={() => setMode(mode === "signin" ? "signup" : "signin")}>
             {mode === "signin" ? "Need an account? Sign up" : "Have an account? Sign in"}

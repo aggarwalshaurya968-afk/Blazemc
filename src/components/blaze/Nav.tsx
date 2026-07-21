@@ -2,25 +2,17 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-type World = "overworld" | "nether" | "end";
+const DEFAULT_DISCORD_URL = "https://discord.gg/7AsNnQd9Mk";
 
 export function Nav({ discordUrl, siteName = "BLAZEMC" }: { discordUrl?: string; siteName?: string }) {
-  const [world, setWorld] = useState<World>("overworld");
   const [signedIn, setSignedIn] = useState(false);
+  const discord = discordUrl ?? DEFAULT_DISCORD_URL;
 
   useEffect(() => {
-    const stored = (typeof window !== "undefined" && localStorage.getItem("blaze-world")) as World | null;
-    if (stored) { setWorld(stored); document.documentElement.setAttribute("data-world", stored); }
     supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSignedIn(!!s));
     return () => { sub.subscription.unsubscribe(); };
   }, []);
-
-  const flip = (w: World) => {
-    setWorld(w);
-    document.documentElement.setAttribute("data-world", w);
-    try { localStorage.setItem("blaze-world", w); } catch {}
-  };
 
   return (
     <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, backdropFilter: "blur(10px)", background: "rgba(16,12,10,.78)", borderBottom: "2px solid #000", boxShadow: "0 2px 0 var(--line)" }}>
@@ -37,18 +29,10 @@ export function Nav({ discordUrl, siteName = "BLAZEMC" }: { discordUrl?: string;
           <a href="/#faq" style={{ color: "var(--ash)" }}>FAQ</a>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ display: "flex", gap: 2, padding: 3, background: "var(--bg3)", border: "2px solid #000" }}>
-            {(["overworld", "nether", "end"] as World[]).map((w) => (
-              <button key={w} onClick={() => flip(w)} title={w}
-                style={{ width: 26, height: 26, border: "none", cursor: "pointer", background: world === w ? "var(--accent)" : "transparent", color: world === w ? "#000" : "var(--ash)", fontFamily: "Press Start 2P", fontSize: ".55rem" }}>
-                {w[0].toUpperCase()}
-              </button>
-            ))}
-          </div>
           {signedIn ? (
             <Link to="/admin" className="mc-btn sm">Admin</Link>
           ) : null}
-          {discordUrl ? <a href={discordUrl} target="_blank" rel="noopener" className="mc-btn primary sm">Discord</a> : null}
+          <a href={discord} target="_blank" rel="noopener" className="mc-btn primary sm">Discord</a>
         </div>
       </div>
     </nav>

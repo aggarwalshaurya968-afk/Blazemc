@@ -2,6 +2,7 @@ export function Footer({ settings }: { settings: Record<string, any> }) {
   const social = settings.social ?? {};
   const server = settings.server ?? {};
   const brand = settings.branding ?? {};
+  const discord = social.discord ?? "https://discord.gg/7AsNnQd9Mk";
   return (
     <footer style={{ position: "relative", zIndex: 2, borderTop: "2px solid #000", background: "var(--bg2)", marginTop: 60, padding: "50px 0 30px" }}>
       <div className="wrap" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 30 }}>
@@ -17,7 +18,7 @@ export function Footer({ settings }: { settings: Record<string, any> }) {
         <div>
           <div className="eyebrow" style={{ marginBottom: 10 }}>Community</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {social.discord && <a href={social.discord} target="_blank" rel="noopener" style={{ color: "var(--ash)" }}>Discord</a>}
+            <a href={discord} target="_blank" rel="noopener" style={{ color: "var(--ash)" }}>Discord</a>
             {social.youtube && <a href={social.youtube} target="_blank" rel="noopener" style={{ color: "var(--ash)" }}>YouTube</a>}
             {social.instagram && <a href={social.instagram} target="_blank" rel="noopener" style={{ color: "var(--ash)" }}>Instagram</a>}
             {social.twitter && <a href={social.twitter} target="_blank" rel="noopener" style={{ color: "var(--ash)" }}>Twitter</a>}
