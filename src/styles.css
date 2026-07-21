@@ -1,0 +1,176 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* =========================================================
+   BlazeMC — Minecraft-flavored theme
+   Three worlds: Overworld (fire), Nether (crimson), End (violet)
+   Flip via [data-world] on <html>.
+   ========================================================= */
+
+:root, [data-world="overworld"]{
+  --bg:#100c0a; --bg2:#1a130f; --bg3:#221812;
+  --accent:#ff7a1a; --accent2:#e6321a; --highlight:#ffc85c;
+  --ash:#a89a8c; --text:#f5ece1;
+  --line:rgba(255,140,60,0.16);
+  --glow:rgba(230,50,26,.4);
+  --grad-a:rgba(230,50,26,0.14);
+  --grad-b:rgba(255,122,26,0.10);
+}
+[data-world="nether"]{
+  --bg:#12060a; --bg2:#1c0910; --bg3:#260d18;
+  --accent:#ff3b6b; --accent2:#a01238; --highlight:#ffb37a;
+  --ash:#b09099; --text:#fbe6ec;
+  --line:rgba(255,80,120,0.18);
+  --glow:rgba(255,60,100,.45);
+  --grad-a:rgba(160,18,56,0.20);
+  --grad-b:rgba(255,60,100,0.10);
+}
+[data-world="end"]{
+  --bg:#0a0714; --bg2:#100c1f; --bg3:#181233;
+  --accent:#b58cff; --accent2:#6e3bff; --highlight:#ffe27a;
+  --ash:#9691b3; --text:#eee6ff;
+  --line:rgba(181,140,255,0.18);
+  --glow:rgba(120,60,255,.45);
+  --grad-a:rgba(110,59,255,0.20);
+  --grad-b:rgba(181,140,255,0.10);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg2: var(--bg2);
+  --color-bg3: var(--bg3);
+  --color-accent: var(--accent);
+  --color-accent2: var(--accent2);
+  --color-highlight: var(--highlight);
+  --color-ash: var(--ash);
+  --color-text: var(--text);
+  --color-line: var(--line);
+  --font-display: 'Anton', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-pixel: 'Press Start 2P', monospace;
+  /* shadcn compat */
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-primary: var(--accent);
+  --color-primary-foreground: #fff;
+  --color-secondary: var(--bg3);
+  --color-secondary-foreground: var(--text);
+  --color-muted: var(--bg3);
+  --color-muted-foreground: var(--ash);
+  --color-accent-foreground: #fff;
+  --color-destructive: #ff5a6b;
+  --color-destructive-foreground: #fff;
+  --color-border: var(--line);
+  --color-input: var(--bg3);
+  --color-ring: var(--accent);
+  --color-card: var(--bg2);
+  --color-card-foreground: var(--text);
+  --color-popover: var(--bg2);
+  --color-popover-foreground: var(--text);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth; background:var(--bg);}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Rajdhani',sans-serif; font-weight:500;
+  overflow-x:hidden; position:relative;
+  transition:background-color .35s ease, color .35s ease;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 15% 0%, var(--grad-a), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 10%, var(--grad-b), transparent 60%);
+  min-height:100vh;
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:1; pointer-events:none;
+  opacity:0.055; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+body::after{
+  content:""; position:fixed; inset:0; z-index:1; pointer-events:none;
+  opacity:.05;
+  background-image:
+    linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px);
+  background-size:24px 24px;
+}
+
+::selection{background:var(--accent2); color:#fff;}
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--accent),var(--accent2));}
+
+a{color:inherit; text-decoration:none;}
+
+.eyebrow{font-family:'Share Tech Mono',monospace; font-size:.72rem; letter-spacing:.28em; text-transform:uppercase; color:var(--accent);}
+.display{font-family:'Anton',sans-serif; text-transform:uppercase; letter-spacing:.01em; line-height:.95;}
+.pixel{font-family:'Press Start 2P', monospace; letter-spacing:.02em; font-size:.7rem;}
+.wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+
+/* Minecraft-style chunky button */
+.mc-btn{
+  display:inline-flex; align-items:center; gap:10px; cursor:pointer; border:none;
+  font-family:'Rajdhani'; font-weight:700; font-size:1rem; padding:12px 22px;
+  color:var(--text); background:var(--bg3); position:relative; text-transform:none;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -3px 0 rgba(0,0,0,.55),
+    0 0 0 2px #000,
+    2px 3px 0 #000;
+  transition:transform .08s ease, filter .12s ease;
+}
+.mc-btn:hover{filter:brightness(1.12); transform:translate(-1px,-1px);}
+.mc-btn:active{transform:translate(1px,2px);}
+.mc-btn.primary{background:linear-gradient(180deg,var(--accent),var(--accent2)); color:#fff;}
+.mc-btn.gold{background:linear-gradient(180deg,var(--highlight),#c98b23); color:#231607;}
+.mc-btn.sm{font-size:.85rem; padding:8px 14px;}
+.mc-btn:disabled{opacity:.5; cursor:not-allowed;}
+
+.pxcard{
+  position:relative; background:var(--bg2); color:var(--text);
+  border:2px solid #000;
+  box-shadow: 0 0 0 4px rgba(0,0,0,.35), inset 0 0 0 1px var(--line);
+  clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px);
+  padding:20px;
+}
+
+.tape{
+  position:absolute; padding:4px 14px; font-family:'Share Tech Mono'; font-size:.7rem;
+  letter-spacing:.18em; text-transform:uppercase; color:#231607;
+  background:var(--highlight); transform:rotate(-3deg);
+  box-shadow:0 4px 8px rgba(0,0,0,.4); z-index:3;
+  top:-14px; left:20px;
+}
+
+.section{position:relative; z-index:2; padding:80px 0;}
+.section-title{font-family:'Anton'; font-size:clamp(2rem,5vw,3.4rem); color:var(--highlight); text-transform:uppercase; letter-spacing:.02em;}
+
+.field{
+  width:100%; padding:12px 14px; background:var(--bg3); border:2px solid #000;
+  color:var(--text); font-family:'Rajdhani'; font-weight:600; font-size:1rem;
+  box-shadow: inset 0 2px 0 rgba(0,0,0,.4);
+}
+.field:focus{outline:2px solid var(--highlight); outline-offset:2px;}
+
+/* embers */
+@keyframes float-up { from{transform:translateY(0); opacity:.9;} to{transform:translateY(-800px); opacity:0;} }
+.ember{position:absolute; bottom:0; width:4px; height:4px; background:var(--accent); box-shadow:0 0 8px var(--accent); animation:float-up linear infinite; pointer-events:none;}
+
+@keyframes blink{50%{opacity:0;}}
+.caret{display:inline-block; width:.5em; background:var(--highlight); animation:blink 1s steps(2) infinite; height:.9em; vertical-align:baseline;}
+
+@keyframes motdScroll{from{transform:translateX(0);} to{transform:translateX(-100%);}}
+.motd-inner{display:inline-flex; gap:60px; white-space:nowrap; animation:motdScroll 40s linear infinite; font-family:'Share Tech Mono'; font-size:.82rem; color:var(--ash); padding-left:100%;}
+.motd-inner b{color:var(--accent);}
+
+@keyframes pulse-live{0%,100%{box-shadow:0 0 0 0 var(--accent);} 50%{box-shadow:0 0 0 6px transparent;}}
+.live-dot{width:8px; height:8px; background:#8effa4; border-radius:50%; box-shadow:0 0 8px #8effa4; animation:pulse-live 2s infinite;}
+
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms !important; transition-duration:.001ms !important;}}
